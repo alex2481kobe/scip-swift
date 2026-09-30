@@ -2,7 +2,7 @@
 ///
 /// Bump this on tagged releases (Decision 4: distributed as a compiled binary release).
 enum ScipSwiftVersion {
-  static let version = "0.3.0"
+  static let version = "0.3.0-sapline.3"
 
   /// Requirement: D-14 (02-03) — the pinned `scip` CLI version the CI gate downloads
   /// (scip-code/scip releases, checksum-verified per D-12) and the engine surfaces in
