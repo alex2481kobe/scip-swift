@@ -90,6 +90,13 @@ struct PrivateContextTable {
       privateDiscriminator: usr.privateDiscriminator)
   }
 
+  /// The parse with its entity name removed, keeping only its containers as nodes.
+  static func contextOnly(_ usr: USRSymbolParser.ParsedUSR) -> USRSymbolParser.ParsedUSR {
+    USRSymbolParser.ParsedUSR(
+      module: usr.module, isSystemModule: usr.isSystemModule, containers: usr.containers,
+      name: "", extendingModule: usr.extendingModule, isOperator: usr.isOperator)
+  }
+
   private static func nodes(of usr: USRSymbolParser.ParsedUSR) -> [Node] {
     var nodes = usr.containers.map {
       Node(name: $0.name, discriminator: $0.privateDiscriminator)

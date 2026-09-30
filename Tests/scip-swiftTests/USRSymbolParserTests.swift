@@ -380,6 +380,7 @@ struct USRSymbolParserTests {
     for i in 0..<7 {
       diagnostics.recordFallback(usr: "s:unparseable\(i)")
     }
+    diagnostics.recordFallback(usr: "s:unparseable0")  // a repeated USR counts once
     #expect(diagnostics.fallbackCount == 7)
     let summary = try! #require(diagnostics.summary)
     #expect(summary.hasPrefix("7 symbol(s) emitted via the raw-USR fallback"))

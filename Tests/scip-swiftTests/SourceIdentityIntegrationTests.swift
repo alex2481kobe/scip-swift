@@ -8,6 +8,12 @@ import Testing
 @Suite("Integration: source ranges and identity")
 struct SourceIdentityIntegrationTests {
   private func build() throws -> Scip_Index {
+    try buildWithDiagnostics().index
+  }
+
+  private func buildWithDiagnostics() throws -> (
+    index: Scip_Index, diagnostics: SymbolMappingDiagnostics
+  ) {
     let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
       .deletingLastPathComponent().deletingLastPathComponent()
     let fixture = root.appendingPathComponent("Fixtures/SourceIdentityFixture").path
@@ -19,11 +25,12 @@ struct SourceIdentityIntegrationTests {
       repoPath: fixture, configuration: .debug,
       scratchPath: work.appendingPathComponent("build").path
     ).produceIndexStore()
-    return try SCIPIndexBuilder(
+    let builder = SCIPIndexBuilder(
       repoPath: fixture, indexStorePath: result.indexStorePath,
       databasePath: work.appendingPathComponent("db").path,
       buildToolName: "swiftpm", converterVersion: "test", demangle: false
-    ).build()
+    )
+    return (try builder.build(), builder.symbolMappingDiagnostics)
   }
 
   @Test("definition occurrences enclose the complete method body")
@@ -91,5 +98,37 @@ struct SourceIdentityIntegrationTests {
       })
     }
     #expect(parents.count == 2)
+  }
+
+  @Test("a private property keeps its name next to an initializer labelled like it")
+  func constructorLabelIsNotAName() throws {
+    let index = try build()
+    let document = try #require(index.documents.first { $0.relativePath.hasSuffix("/Fourth.swift") })
+    let symbols = Set(document.symbols.map(\.symbol))
+    let property = "scip-swift swiftpm SourceIdentityFixture . Service#dependencies."
+    #expect(symbols.contains(property), "\(symbols.sorted())")
+    #expect(document.occurrences.contains { $0.symbol == property && $0.symbolRoles & 1 == 0 })
+    #expect(!symbols.contains { $0.contains("@") }, "\(symbols.sorted())")
+  }
+
+  @Test("the fallback diagnostic counts each emitted raw-USR fallback once")
+  func fallbackCountIsNotInflated() throws {
+    let (index, diagnostics) = try buildWithDiagnostics()
+    // Every raw-USR fallback renders its USR as the escaped last descriptor.
+    var emitted: [String] = index.externalSymbols.map(\.symbol)
+    for document in index.documents {
+      emitted += document.occurrences.map(\.symbol)
+      for info in document.symbols {
+        emitted += [info.symbol, info.enclosingSymbol] + info.relationships.map(\.symbol)
+      }
+    }
+    let usrs = Set(emitted.compactMap { symbol -> String? in
+      guard symbol.hasSuffix("`."), let open = symbol.range(of: " `", options: .backwards)
+      else { return nil }
+      let usr = String(symbol[open.upperBound..<symbol.index(symbol.endIndex, offsetBy: -2)])
+      return usr.hasPrefix("s:") || usr.hasPrefix("c:") ? usr : nil
+    })
+    #expect(!usrs.isEmpty, "the fixture must exercise the fallback")
+    #expect(diagnostics.fallbackCount == usrs.count, "\(diagnostics.summary ?? "silent")")
   }
 }

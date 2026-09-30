@@ -146,7 +146,14 @@ extension SCIPIndexBuilder {
       for occurrence in indexStoreDB.symbolOccurrences(inFilePath: path) {
         for symbol in [occurrence.symbol] + occurrence.relations.map(\.symbol)
         where !symbol.properties.contains(.local) && parsed[symbol.usr] == nil {
-          if let usr = USRSymbolParser.parse(symbol.usr) { parsed[symbol.usr] = usr }
+          guard var usr = USRSymbolParser.parse(symbol.usr) else { continue }
+          // After an initializer's type comes its first argument label, not a declared name;
+          // its parameters (no canonical kind) carry the same word. Keep only their context.
+          let kind = USRSymbolMapper.declKind(for: symbol)
+          if kind == nil || kind == .constructor || kind == .destructor {
+            usr = PrivateContextTable.contextOnly(usr)
+          }
+          parsed[symbol.usr] = usr
         }
       }
     }
@@ -166,7 +173,8 @@ extension SCIPIndexBuilder {
             isSystemLocation: isSystem,
             locationModuleName: occurrence.location.moduleName,
             overloadIndex: overloadTable.index(forUSR: symbol.usr),
-            privateContexts: overloadTable.privateContexts
+            privateContexts: overloadTable.privateContexts,
+            recordsFallback: false
           )
           let fallback = SCIPSymbolFormatter.fallbackSymbolString(
             isSystem: isSystem,

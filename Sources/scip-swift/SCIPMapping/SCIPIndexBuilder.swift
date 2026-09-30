@@ -248,10 +248,12 @@ struct SCIPIndexBuilder {
     overloadIndex: Int = 0,
     identityTable: SymbolIdentityTable? = nil,
     privateContexts: PrivateContextTable? = nil,
-    fallbackRecorder: USRSideMapRecorder? = nil
+    fallbackRecorder: USRSideMapRecorder? = nil,
+    recordsFallback: Bool = true
   ) -> String {
     if let resolved = identityTable?.symbolsByUSR[symbol.usr] {
       if identityTable?.fallbackUSRs.contains(symbol.usr) == true {
+        if recordsFallback { symbolMappingDiagnostics.recordFallback(usr: symbol.usr) }
         fallbackRecorder?.record(symbolString: resolved, usr: symbol.usr)
       }
       return resolved
@@ -268,7 +270,7 @@ struct SCIPIndexBuilder {
     {
       return canonical
     }
-    symbolMappingDiagnostics.recordFallback(usr: symbol.usr)
+    if recordsFallback { symbolMappingDiagnostics.recordFallback(usr: symbol.usr) }
     let fallback = SCIPSymbolFormatter.fallbackSymbolString(
       isSystem: isSystemLocation,
       moduleName: locationModuleName,
