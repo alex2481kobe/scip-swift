@@ -14,6 +14,20 @@ import IndexStoreDB
 /// relations for Swift code. Protocol conformance also does not produce type-level
 /// relations. Relationship mapping is therefore limited to override relationships.
 enum RelationshipMapping {
+  /// One edge per target, retaining every flag and independent of occurrence order.
+  static func union(_ relationships: [Scip_Relationship]) -> [Scip_Relationship] {
+    var targets: [String: Scip_Relationship] = [:]
+    for relationship in relationships {
+      var merged = targets[relationship.symbol] ?? relationship
+      merged.isReference = merged.isReference || relationship.isReference
+      merged.isImplementation = merged.isImplementation || relationship.isImplementation
+      merged.isTypeDefinition = merged.isTypeDefinition || relationship.isTypeDefinition
+      merged.isDefinition = merged.isDefinition || relationship.isDefinition
+      targets[relationship.symbol] = merged
+    }
+    return targets.values.sorted { $0.symbol < $1.symbol }
+  }
+
   static func scipRelationships(
     for relations: [SymbolRelation],
     symbolFormatter: (Symbol) -> String
