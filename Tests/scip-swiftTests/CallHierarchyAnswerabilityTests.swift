@@ -449,19 +449,19 @@ struct CallHierarchyAnswerabilityTests {
     }
   }
 
-  @Test("zero-emission guard: format stays 5 and relationships equal the committed table")
+  @Test("zero-emission guard: format stays 6 and relationships equal the committed table")
   func zeroEmissionGuard() throws {
     let index = try Self.sharedIndex()
 
-    // This plan changes NO emission: the format version stays 5 (a byte change
-    // would be a D-09 bump — out of scope here), and the relationships this
+    // This suite changes NO emission: the format version stays 6 (a byte change
+    // would be a D-09 bump), and the relationships this
     // suite's build produces are exactly the committed relationship-table.json
     // rows the RelationshipParity oracle pins over the same fixture build path.
     // Goldens byte-stability is proven by ScipCLIGate and Determinism in the
     // same single `swift test` CI step (the plan's Task 4 full-suite run).
     #expect(
-      SymbolFormatVersion.current == 5,
-      "SymbolFormatVersion.current must stay 5 in this plan — a change means emission drift"
+      SymbolFormatVersion.current == 6,
+      "SymbolFormatVersion.current must stay 6 — a change means emission drift"
     )
 
     let tablePath = (Self.fixtureRepoPath() as NSString)

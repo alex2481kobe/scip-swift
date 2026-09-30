@@ -38,6 +38,9 @@ enum USRSymbolParser {
     /// True when the entity's mangling carries the operator encoding marker (`<word>oi…`):
     /// the parsed word is the operator's mangled letters, not its source spelling.
     let isOperator: Bool
+    /// The entity's own private-context discriminator, when it was declared `private` or
+    /// `fileprivate`. Containers carry theirs on `Container.privateDiscriminator`.
+    var privateDiscriminator: String? = nil
   }
 
   /// Parses a USR. Returns nil on any miss — unparseable shapes, non-`s:` schemes, and
@@ -141,15 +144,17 @@ enum USRSymbolParser {
     /// owner module (SYM-02).
     let extendingModule: String?
     let isOperator: Bool
+    let privateDiscriminator: String?
 
     init(
       name: String, uninterpretedReaderTail: Bool, extendingModule: String? = nil,
-      isOperator: Bool = false
+      isOperator: Bool = false, privateDiscriminator: String? = nil
     ) {
       self.name = name
       self.uninterpretedReaderTail = uninterpretedReaderTail
       self.extendingModule = extendingModule
       self.isOperator = isOperator
+      self.privateDiscriminator = privateDiscriminator
     }
   }
 
@@ -190,6 +195,9 @@ enum USRSymbolParser {
         return Entity(name: word, uninterpretedReaderTail: false, extendingModule: extendingModule)
       }
 
+      // Keep the private discriminator off the name, so private containers retain their
+      // members. PrivateContextTable uses it when same-spelled private declarations collide.
+      let discriminator = cursor.consumePrivateDiscriminator()
       guard let next = cursor.peek() else { return nil }
 
       if next == "E" {
@@ -204,7 +212,9 @@ enum USRSymbolParser {
 
       if let kind = containerKind(for: next) {
         cursor.advance()
-        containers.append(CanonicalSymbolFormatter.Container(name: word, kind: kind))
+        containers.append(
+          CanonicalSymbolFormatter.Container(
+            name: word, kind: kind, privateDiscriminator: discriminator))
         continue
       }
 
@@ -218,13 +228,14 @@ enum USRSymbolParser {
       let isOperator = cursor.remaining().hasPrefix("oi")
       return Entity(
         name: word, uninterpretedReaderTail: false, extendingModule: extendingModule,
-        isOperator: isOperator)
+        isOperator: isOperator, privateDiscriminator: discriminator)
     }
 
     // The chain ended on a container: the innermost container is the entity itself.
     guard let innermost = containers.popLast() else { return nil }
     return Entity(
-      name: innermost.name, uninterpretedReaderTail: false, extendingModule: extendingModule)
+      name: innermost.name, uninterpretedReaderTail: false, extendingModule: extendingModule,
+      privateDiscriminator: innermost.privateDiscriminator)
   }
 
   private static func finish(
@@ -236,7 +247,8 @@ enum USRSymbolParser {
     guard !entity.uninterpretedReaderTail else { return nil }
     return ParsedUSR(
       module: module, isSystemModule: isSystem, containers: containers, name: entity.name,
-      extendingModule: entity.extendingModule, isOperator: entity.isOperator)
+      extendingModule: entity.extendingModule, isOperator: entity.isOperator,
+      privateDiscriminator: entity.privateDiscriminator)
   }
 
   /// Kind letters that may follow a word in container position.
@@ -454,6 +466,18 @@ enum USRSymbolParser {
       }
       index += chars.count
       return true
+    }
+
+    /// Consumes a `33_<32 hex>LL` private-context discriminator and returns its hex digits.
+    mutating func consumePrivateDiscriminator() -> String? {
+      var probe = self
+      guard let discriminator = probe.readWord(), discriminator.hasPrefix("_"),
+        discriminator.count == 33,
+        discriminator.dropFirst().allSatisfy({ $0.isASCII && $0.isHexDigit }),
+        probe.consume(prefix: "LL")
+      else { return nil }
+      self = probe
+      return String(discriminator.dropFirst())
     }
 
     /// Peeks an `S`-prefixed stdlib substitution (two characters) without consuming it.
