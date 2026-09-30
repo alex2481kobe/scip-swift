@@ -104,8 +104,9 @@ to a persistent cache:
   declaration enclosing ranges on definitions, colliding `private`/`fileprivate` declarations
   disambiguated as `` `Name@<discriminator>` `` with their members under that parent, raw-USR
   fallbacks defined in the index spelled with the defining module at every occurrence,
-  locals' `enclosing_symbol` on the correct overload `(+N)`, and word-substitution names
-  now decode fully) changes
+  locals' `enclosing_symbol` on the correct overload `(+N)`, word-substitution names now
+  decode fully, and member witness edges are kept when the conformance is declared in an
+  extension) changes
   (recorded in `manifest.json`). A manifest that fails
   to decode — e.g. written by an older engine without
   the current fields — is treated as no manifest: the cache is discarded wholesale, so

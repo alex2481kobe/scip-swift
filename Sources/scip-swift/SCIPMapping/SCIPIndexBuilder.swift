@@ -74,6 +74,8 @@ struct SCIPIndexBuilder {
     // construction (Pitfall 4 — the lint missingSymbolForOccurrenceError contract).
     let overloadTable = buildOverloadTable(indexStoreDB: indexStoreDB)
     let identityTable = buildIdentityTable(indexStoreDB: indexStoreDB, overloadTable: overloadTable)
+    let relationships = collectRelationships(
+      indexStoreDB: indexStoreDB, overloadTable: overloadTable, identityTable: identityTable)
 
     // D-10 / T-02-04 (02-02 Task 3): the overload-table fingerprint is a GLOBAL cache
     // validation key. Documents are keyed by their own file's composite (relativePath,
@@ -173,7 +175,10 @@ struct SCIPIndexBuilder {
         }
       }
 
-      if let document {
+      if var document {
+        // Apply after definition selection and cache loading: another file may have added
+        // or removed a conformance without changing this defining document's content hash.
+        Self.applyRelationships(relationships, to: &document)
         definedSymbolStrings.formUnion(document.symbols.map(\.symbol))
         index.documents.append(document)
       }
@@ -545,21 +550,6 @@ struct SCIPIndexBuilder {
       }
 
       if occurrence.roles.contains(.definition) {
-        if !isLocal {
-          symbolInformation.relationships = RelationshipMapping.scipRelationships(
-            for: occurrence.relations,
-            symbolFormatter: { relSymbol in
-              canonicalSymbolString(
-                for: relSymbol,
-                isSystemLocation: occurrence.location.isSystem,
-                locationModuleName: occurrence.location.moduleName,
-                overloadIndex: overloadTable.index(forUSR: relSymbol.usr),
-                identityTable: identityTable,
-                fallbackRecorder: fallbackRecorder
-              )
-            }
-          )
-        }
         // Multiple definition occurrences of the same USR retain the last source position.
         let position = DefinitionPosition(
           relativePath: relativePath(of: filePath),
