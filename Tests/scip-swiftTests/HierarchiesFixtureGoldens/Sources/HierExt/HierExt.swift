@@ -90,9 +90,9 @@
   }
 //⌃ enclosing_range_end scip-swift swiftpm HierExt . extCaller().
   
-//⌄ enclosing_range_start scip-swift swiftpm HierExt . extCallerOf().
+//⌄ enclosing_range_start scip-swift swiftpm HierExt . extCallerOfCaller().
   func extCallerOfCaller() {
-//     ^^^^^^^^^^^^^^^^^ definition scip-swift swiftpm HierExt . extCallerOf().
+//     ^^^^^^^^^^^^^^^^^ definition scip-swift swiftpm HierExt . extCallerOfCaller().
 //                       kind Function
 //                       display_name HierExt.extCallerOfCaller() -> ()
 //                       signature_documentation
@@ -100,5 +100,5 @@
     extCaller()
 //  ^^^^^^^^^ reference scip-swift swiftpm HierExt . extCaller().
   }
-//⌃ enclosing_range_end scip-swift swiftpm HierExt . extCallerOf().
+//⌃ enclosing_range_end scip-swift swiftpm HierExt . extCallerOfCaller().
   

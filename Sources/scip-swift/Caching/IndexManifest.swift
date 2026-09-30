@@ -105,7 +105,8 @@ enum SymbolFormatVersion {
   /// their declaration's enclosing range; colliding `private`/`fileprivate` declarations
   /// carry an `@<discriminator>` on their own descriptor, with their members under it;
   /// raw-USR fallbacks defined in the index use the defining document's module header at
-  /// every occurrence; and locals' enclosing symbols name the correct overload `(+N)`.
+  /// every occurrence; locals' enclosing symbols name the correct overload `(+N)`; and
+  /// identifiers mangled with word substitutions decode to their full source names.
   /// A bump wholesale-invalidates older caches via the same manifest gate.
   static let current = 6
 }

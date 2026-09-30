@@ -333,6 +333,15 @@ struct USRSymbolParserTests {
 
   // MARK: - D-06 totality over adversarial input (T-02-01)
 
+  @Test("generic parameter names come from the compiler rather than the enclosing function")
+  func genericParameterSourceName() throws {
+    let parsed = try #require(USRSymbolParser.parse("s:4Test4ViewV4cardyyF"))
+    let symbol = makeSymbol(
+      usr: "s:generic-parameter", name: "Content", kind: .typealias,
+      subKind: .swiftGenericTypeParam)
+    #expect(USRSymbolMapper.sourceName(parsed: parsed, symbol: symbol) == "Content")
+  }
+
   @Test("rune soup, huge claimed lengths, and truncation never crash and return nil")
   func adversarialInputIsTotal() {
     let adversarial: [String] = [

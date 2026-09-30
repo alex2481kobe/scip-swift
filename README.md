@@ -103,8 +103,9 @@ to a persistent cache:
   relationship-target external symbols, and stdlib-protocol canonical forms; format 6
   declaration enclosing ranges on definitions, colliding `private`/`fileprivate` declarations
   disambiguated as `` `Name@<discriminator>` `` with their members under that parent, raw-USR
-  fallbacks defined in the index spelled with the defining module at every occurrence, and
-  locals' `enclosing_symbol` on the correct overload `(+N)`) changes
+  fallbacks defined in the index spelled with the defining module at every occurrence,
+  locals' `enclosing_symbol` on the correct overload `(+N)`, and word-substitution names
+  now decode fully) changes
   (recorded in `manifest.json`). A manifest that fails
   to decode — e.g. written by an older engine without
   the current fields — is treated as no manifest: the cache is discarded wholesale, so
@@ -263,10 +264,8 @@ RelationshipParity, riding the same single `swift test` CI step):
   coreDriver → Circle init + drawAll`), dynamic dispatch (existential, class-virtual, and
   generic-constraint sites) asserted via the access bit + position, and corpus-wide
   attribution invariants (exactly-once, no phantom attribution, leaves empty). Documented
-  v1 shapes: occurrence-only fallback-Term call sites (`Double(spokes)`, array literals)
-  are not answerable by name, and the `extCallerOfCaller` canonical string carries a
-  word-substitution mis-parse (`extCallerOf`. — display name stays truthful) pinned
-  as-is; both are recorded watch items, not emission contracts.
+  v1 shape: occurrence-only fallback-Term call sites (`Double(spokes)`, array literals)
+  are not answerable by name; this is a recorded watch item, not an emission contract.
 - **`TypeHierarchyAnswerability`** (`Tests/scip-swiftTests/TypeHierarchyAnswerabilityTests.swift`,
   REL-03): supertypes(T) = the `is_implementation` targets on every SymbolInformation
   whose symbol is T (scip.proto's Dog/Animal Find-implementations semantics); subtypes

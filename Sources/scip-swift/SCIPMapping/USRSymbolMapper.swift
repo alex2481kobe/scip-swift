@@ -179,6 +179,10 @@ enum USRSymbolMapper {
       break
     }
     switch symbol.subKind {
+    case .swiftGenericTypeParam:
+      // Generic parameter USRs carry their name in the opaque local-context tail.
+      // The compiler's short name is the source identifier, not the enclosing function.
+      return symbol.name.isEmpty ? nil : symbol.name
     case .accessorSetter, .swiftAccessorWillSet, .swiftAccessorDidSet,
       .swiftAccessorMutableAddressor:
       return parsed.name.isEmpty ? nil : "\(parsed.name)="
