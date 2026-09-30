@@ -153,6 +153,9 @@ enum USRSymbolParser {
         return Entity(name: word, uninterpretedReaderTail: false, extendingModule: extendingModule)
       }
 
+      // Skip only the private discriminator, so private containers retain their members.
+      // The identity table preserves this context when canonical spellings collide.
+      cursor.consumePrivateDiscriminator()
       guard let next = cursor.peek() else { return nil }
 
       if next == "E" {
@@ -376,6 +379,16 @@ enum USRSymbolParser {
       }
       index += chars.count
       return true
+    }
+
+    mutating func consumePrivateDiscriminator() {
+      var probe = self
+      guard let discriminator = probe.readWord(), discriminator.hasPrefix("_"),
+        discriminator.count == 33,
+        discriminator.dropFirst().allSatisfy({ $0.isASCII && $0.isHexDigit }),
+        probe.consume(prefix: "LL")
+      else { return }
+      self = probe
     }
 
     /// Peeks an `S`-prefixed stdlib substitution (two characters) without consuming it.

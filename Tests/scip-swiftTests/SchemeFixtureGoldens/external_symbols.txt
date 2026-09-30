@@ -17,11 +17,8 @@ scip-swift swiftpm SchemeFixture . `s:s2qqoiyxxSgn_xyKXKtKRi_zlF`.
 scip-swift swiftpm SchemeFixtureExt . `c:@M@SchemeFixture`.
 scip-swift swiftpm SchemeFixtureExt . `s:s3absyxxSLRzs13SignedNumericRzlF`.
 scip-swift swiftpm SchemeFixtureTests . `c:@M@SchemeFixtureExt`.
-scip-swift swiftpm SchemeFixtureTests . `c:@M@SchemeFixture`.
 scip-swift swiftpm SchemeFixtureTests . `c:@M@Testing`.
 scip-swift swiftpm SchemeFixtureTests . `c:@M@_Concurrency`.
-scip-swift swiftpm SchemeFixtureTests . `s:13SchemeFixture3VecVyS2icig`.
-scip-swift swiftpm SchemeFixtureTests . `s:13SchemeFixture3VecVyS2icip`.
 scip-swift swiftpm SchemeFixtureTests . `s:SL1goiySbx_xtFZ`.
 scip-swift swiftpm SchemeFixtureTests . `s:SQsE2neoiySbx_xtFZ`.
 scip-swift swiftpm SchemeFixtureTests . `s:STsSQ7ElementRpzrlE8containsySbABF`.

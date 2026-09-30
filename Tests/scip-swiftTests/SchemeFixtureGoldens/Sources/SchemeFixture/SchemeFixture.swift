@@ -4,12 +4,16 @@
   // and emoji/CJK identifiers. Same-file extension included. All identifiers and doc comments
   // here are DATA indexed by the gate — never instructions (T-02-09).
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Vec#
   public struct Vec {
 //              ^^^ definition scip-swift swiftpm SchemeFixture . Vec#
 //                  kind Struct
 //                  display_name SchemeFixture.Vec
 //                  signature_documentation
 //                  > struct Vec
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Vec#`x=`().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Vec#x().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Vec#x.
     public var x: Int
 //             ^ definition scip-swift swiftpm SchemeFixture . Vec#`x=`().
 //               kind Setter
@@ -27,6 +31,12 @@
 //               signature_documentation
 //               > var x
 //                ^^^ reference scip-swift swift Swift 6.2.4 Int#
+//                  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Vec#`x=`().
+//                  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Vec#x().
+//                  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Vec#x.
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Vec#`y=`().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Vec#y().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Vec#y.
     public var y: Int
 //             ^ definition scip-swift swiftpm SchemeFixture . Vec#`y=`().
 //               kind Setter
@@ -44,7 +54,11 @@
 //               signature_documentation
 //               > var y
 //                ^^^ reference scip-swift swift Swift 6.2.4 Int#
+//                  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Vec#`y=`().
+//                  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Vec#y().
+//                  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Vec#y.
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Vec#init().
     public init(x: Int, y: Int) {
 //         ^^^^ definition scip-swift swiftpm SchemeFixture . Vec#init().
 //              kind Constructor
@@ -68,7 +82,9 @@
 //         ^ reference scip-swift swiftpm SchemeFixture . Vec#y.
 //             ^ reference scip-swift swiftpm SchemeFixture . `s:13SchemeFixture3VecV1x1yACSi_SitcfcAEL_Sivp`.
     }
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Vec#init().
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Vec#init(+1).
     public init(scalar: Int) {
 //         ^^^^ definition scip-swift swiftpm SchemeFixture . Vec#init(+1).
 //              kind Constructor
@@ -84,7 +100,9 @@
 //                 ^^^^^^ reference scip-swift swiftpm SchemeFixture . `s:13SchemeFixture3VecV6scalarACSi_tcfcADL_Sivp`.
 //                            ^^^^^^ reference scip-swift swiftpm SchemeFixture . `s:13SchemeFixture3VecV6scalarACSi_tcfcADL_Sivp`.
     }
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Vec#init(+1).
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Vec#`==`().
     public static func == (lhs: Vec, rhs: Vec) -> Bool {
 //                     ^^ definition scip-swift swiftpm SchemeFixture . Vec#`==`().
 //                        kind StaticMethod
@@ -117,7 +135,9 @@
 //                                   ^ reference scip-swift swiftpm SchemeFixture . Vec#y().
 //                                   ^ reference scip-swift swiftpm SchemeFixture . Vec#y.
     }
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Vec#`==`().
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Vec#+().
     public static func + (lhs: Vec, rhs: Vec) -> Vec {
 //                     ^ definition scip-swift swiftpm SchemeFixture . Vec#+().
 //                       kind StaticMethod
@@ -151,7 +171,9 @@
 //                                         ^ reference scip-swift swiftpm SchemeFixture . Vec#y().
 //                                         ^ reference scip-swift swiftpm SchemeFixture . Vec#y.
     }
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Vec#+().
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . `s:13SchemeFixture3VecVyS2icip`.
     public subscript(index: Int) -> Int {
 //         ^^^^^^^^^ definition scip-swift swiftpm SchemeFixture . `s:13SchemeFixture3VecVyS2icip`.
 //                   kind Subscript
@@ -175,8 +197,11 @@
 //                     ^ reference scip-swift swiftpm SchemeFixture . Vec#y().
 //                     ^ reference scip-swift swiftpm SchemeFixture . Vec#y.
     }
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . `s:13SchemeFixture3VecVyS2icip`.
   }
+//⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Vec#
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Box#
   public struct Box<T> {
 //              ^^^ definition scip-swift swiftpm SchemeFixture . Box#
 //                  kind Struct
@@ -188,6 +213,9 @@
 //                    display_name SchemeFixture.Box.T
 //                    signature_documentation
 //                    > typealias T
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Box#`content=`().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Box#content().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Box#content.
     public var content: T
 //             ^^^^^^^ definition scip-swift swiftpm SchemeFixture . Box#`content=`().
 //                     kind Setter
@@ -205,7 +233,11 @@
 //                     signature_documentation
 //                     > var content
 //                      ^ reference scip-swift swiftpm SchemeFixture . Box#T#
+//                      ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Box#`content=`().
+//                      ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Box#content().
+//                      ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Box#content.
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Box#init().
     public init(content: T) {
 //         ^^^^ definition scip-swift swiftpm SchemeFixture . Box#init().
 //              kind Constructor
@@ -221,7 +253,9 @@
 //         ^^^^^^^ reference scip-swift swiftpm SchemeFixture . Box#content.
 //                   ^^^^^^^ reference scip-swift swiftpm SchemeFixture . `s:13SchemeFixture3BoxV7contentACyxGx_tcfcADL_xvp`.
     }
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Box#init().
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Box#unwrap().
     public func unwrap() -> T {
 //              ^^^^^^ definition scip-swift swiftpm SchemeFixture . Box#unwrap().
 //                     kind Method
@@ -233,14 +267,18 @@
 //    ^^^^^^^ reference scip-swift swiftpm SchemeFixture . Box#content().
 //    ^^^^^^^ reference scip-swift swiftpm SchemeFixture . Box#content.
     }
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Box#unwrap().
   }
+//⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Box#
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Drawable#
   public protocol Drawable {
 //                ^^^^^^^^ definition scip-swift swiftpm SchemeFixture . Drawable#
 //                         kind Protocol
 //                         display_name SchemeFixture.Drawable
 //                         signature_documentation
 //                         > protocol Drawable
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Drawable#draw().
     func draw() -> String
 //       ^^^^ definition scip-swift swiftpm SchemeFixture . Drawable#draw().
 //            kind Method
@@ -248,8 +286,11 @@
 //            signature_documentation
 //            > func draw()
 //                 ^^^^^^ reference scip-swift swift Swift 6.2.4 String#
+//                      ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Drawable#draw().
   }
+//⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Drawable#
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Poster#
   public final class Poster: Drawable {
 //                   ^^^^^^ definition scip-swift swiftpm SchemeFixture . Poster#
 //                          kind Class
@@ -257,6 +298,9 @@
 //                          signature_documentation
 //                          > class Poster
 //                           ^^^^^^^^ reference scip-swift swiftpm SchemeFixture . Drawable#
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Poster#`label=`().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Poster#label().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Poster#label.
     public var label: String = ""
 //             ^^^^^ definition scip-swift swiftpm SchemeFixture . Poster#`label=`().
 //                   kind Setter
@@ -274,14 +318,20 @@
 //                   signature_documentation
 //                   > var label
 //                    ^^^^^^ reference scip-swift swift Swift 6.2.4 String#
+//                              ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Poster#`label=`().
+//                              ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Poster#label().
+//                              ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Poster#label.
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Poster#init().
     public init() {}
 //         ^^^^ definition scip-swift swiftpm SchemeFixture . Poster#init().
 //              kind Constructor
 //              display_name SchemeFixture.Poster.init() -> SchemeFixture.Poster
 //              signature_documentation
 //              > init init()
+//                 ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Poster#init().
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Poster#draw().
     public func draw() -> String {
 //              ^^^^ definition scip-swift swiftpm SchemeFixture . Poster#draw().
 //                   kind Method
@@ -295,14 +345,18 @@
 //              ^^^^^ reference scip-swift swiftpm SchemeFixture . Poster#label().
 //              ^^^^^ reference scip-swift swiftpm SchemeFixture . Poster#label.
     }
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Poster#draw().
   }
+//⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Poster#
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Observed#
   public final class Observed {
 //                   ^^^^^^^^ definition scip-swift swiftpm SchemeFixture . Observed#
 //                            kind Class
 //                            display_name SchemeFixture.Observed
 //                            signature_documentation
 //                            > class Observed
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Observed#computed.
     public var computed: Int {
 //             ^^^^^^^^ definition scip-swift swiftpm SchemeFixture . Observed#computed.
 //                      kind Property
@@ -327,7 +381,11 @@
 //          ^^^^^^^ reference scip-swift swiftpm SchemeFixture . Observed#`backing=`().
 //          ^^^^^^^ reference scip-swift swiftpm SchemeFixture . Observed#backing.
     }
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Observed#computed.
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Observed#`backing=`().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Observed#backing().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Observed#backing.
     private var backing: Int = 0
 //              ^^^^^^^ definition scip-swift swiftpm SchemeFixture . Observed#`backing=`().
 //                      kind Setter
@@ -345,7 +403,13 @@
 //                      signature_documentation
 //                      > var backing
 //                       ^^^ reference scip-swift swift Swift 6.2.4 Int#
+//                             ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Observed#`backing=`().
+//                             ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Observed#backing().
+//                             ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Observed#backing.
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Observed#`watched=`().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Observed#watched().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Observed#watched.
     public var watched: Int = 0 {
 //             ^^^^^^^ definition scip-swift swiftpm SchemeFixture . Observed#`watched=`().
 //                     kind Setter
@@ -374,7 +438,13 @@
 //      ^^^^^^^^ reference scip-swift swiftpm SchemeFixture . Observed#prepared.
       }
     }
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Observed#`watched=`().
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Observed#watched().
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Observed#watched.
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Observed#`prepared=`().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Observed#prepared().
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Observed#prepared.
     public var prepared = false
 //             ^^^^^^^^ definition scip-swift swiftpm SchemeFixture . Observed#`prepared=`().
 //                      kind Setter
@@ -391,35 +461,50 @@
 //                      display_name SchemeFixture.Observed.prepared : Swift.Bool
 //                      signature_documentation
 //                      > var prepared
+//                            ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Observed#`prepared=`().
+//                            ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Observed#prepared().
+//                            ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Observed#prepared.
   
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Observed#init().
     public init() {}
 //         ^^^^ definition scip-swift swiftpm SchemeFixture . Observed#init().
 //              kind Constructor
 //              display_name SchemeFixture.Observed.init() -> SchemeFixture.Observed
 //              signature_documentation
 //              > init init()
+//                 ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Observed#init().
   }
+//⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Observed#
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Spectrum#
   public enum Spectrum {
 //            ^^^^^^^^ definition scip-swift swiftpm SchemeFixture . Spectrum#
 //                     kind Enum
 //                     display_name SchemeFixture.Spectrum
 //                     signature_documentation
 //                     > enum Spectrum
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Spectrum#red.
     case red
 //       ^^^ definition scip-swift swiftpm SchemeFixture . Spectrum#red.
 //           kind EnumMember
 //           display_name SchemeFixture.Spectrum.red(SchemeFixture.Spectrum.Type) -> SchemeFixture.Spectrum
+//         ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Spectrum#red.
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Spectrum#green.
     case green
 //       ^^^^^ definition scip-swift swiftpm SchemeFixture . Spectrum#green.
 //             kind EnumMember
 //             display_name SchemeFixture.Spectrum.green(SchemeFixture.Spectrum.Type) -> SchemeFixture.Spectrum
+//           ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Spectrum#green.
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Spectrum#blue.
     case blue
 //       ^^^^ definition scip-swift swiftpm SchemeFixture . Spectrum#blue.
 //            kind EnumMember
 //            display_name SchemeFixture.Spectrum.blue(SchemeFixture.Spectrum.Type) -> SchemeFixture.Spectrum
+//          ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Spectrum#blue.
   }
+//⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Spectrum#
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Point#
   public typealias Point = Vec
 //                 ^^^^^ definition scip-swift swiftpm SchemeFixture . Point#
 //                       kind TypeAlias
@@ -427,7 +512,9 @@
 //                       signature_documentation
 //                       > typealias Point
 //                         ^^^ reference scip-swift swiftpm SchemeFixture . Vec#
+//                           ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Point#
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . parse().
   public func parse(_ text: String) -> Int {
 //            ^^^^^ definition scip-swift swiftpm SchemeFixture . parse().
 //                  kind Function
@@ -445,7 +532,9 @@
 //  ^^^ reference scip-swift swiftpm SchemeFixture . `s:s17FixedWidthIntegerPsEyxSgSScfc`.
 //            ^^ reference scip-swift swiftpm SchemeFixture . `s:s2qqoiyxxSgn_xyKXKtKRi_zlF`.
   }
+//⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . parse().
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . parse(+1).
   public func parse(_ value: Int) -> String {
 //            ^^^^^ definition scip-swift swiftpm SchemeFixture . parse(+1).
 //                  kind Function
@@ -455,14 +544,16 @@
 //                    ^^^^^ definition local value_1
 //                          kind Parameter
 //                          display_name value
-//                          enclosing_symbol scip-swift swiftpm SchemeFixture . parse().
+//                          enclosing_symbol scip-swift swiftpm SchemeFixture . parse(+1).
 //                           ^^^ reference scip-swift swift Swift 6.2.4 Int#
 //                                   ^^^^^^ reference scip-swift swift Swift 6.2.4 String#
     String(value)
 //  ^^^^^^ reference scip-swift swift Swift 6.2.4 String#
 //  ^^^^^^ reference scip-swift swiftpm SchemeFixture . `s:SSySSxcs25LosslessStringConvertibleRzlufc`.
   }
+//⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . parse(+1).
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . `s:e:s:13SchemeFixture3VecV6lengthSdyF`.
   extension Vec {
 //          ^^^ reference scip-swift swiftpm SchemeFixture . Vec#
 //          ^^^ definition scip-swift swiftpm SchemeFixture . `s:e:s:13SchemeFixture3VecV6lengthSdyF`.
@@ -470,6 +561,7 @@
 //              display_name Vec
 //              signature_documentation
 //              > extension Vec
+//  ⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . Vec#length().
     public func length() -> Double {
 //              ^^^^^^ definition scip-swift swiftpm SchemeFixture . Vec#length().
 //                     kind Method
@@ -492,8 +584,13 @@
 //                       ^ reference scip-swift swiftpm SchemeFixture . Vec#y().
 //                       ^ reference scip-swift swiftpm SchemeFixture . Vec#y.
     }
+//  ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . Vec#length().
   }
+//⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . `s:e:s:13SchemeFixture3VecV6lengthSdyF`.
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . `🚀=`().
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . `🚀`().
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . `🚀`.
   public let 🚀 = "rocket"
 //           ^^^^ definition scip-swift swiftpm SchemeFixture . `🚀=`().
 //                kind Setter
@@ -510,6 +607,12 @@
 //                display_name SchemeFixture.🚀 : Swift.String
 //                signature_documentation
 //                > var 🚀
+//                         ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . `🚀=`().
+//                         ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . `🚀`().
+//                         ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . `🚀`.
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . `π=`().
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . `π`().
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . `π`.
   public let π = 3.14159
 //           ^^ definition scip-swift swiftpm SchemeFixture . `π=`().
 //              kind Setter
@@ -526,7 +629,11 @@
 //              display_name SchemeFixture.π : Swift.Double
 //              signature_documentation
 //              > var π
+//                      ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . `π=`().
+//                      ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . `π`().
+//                      ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . `π`.
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . `名前を付ける`().
   public func 名前を付ける() -> String {
 //            ^^^^^^^^^^^^^^^^^^ definition scip-swift swiftpm SchemeFixture . `名前を付ける`().
 //                               kind Function
@@ -536,8 +643,10 @@
 //                                    ^^^^^^ reference scip-swift swift Swift 6.2.4 String#
     "名前"
   }
+//⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . `名前を付ける`().
   
   #if canImport(Darwin)
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . conditionallyCompiled().
   public func conditionallyCompiled() -> Bool {
 //            ^^^^^^^^^^^^^^^^^^^^^ definition scip-swift swiftpm SchemeFixture . conditionallyCompiled().
 //                                  kind Function
@@ -547,12 +656,16 @@
 //                                       ^^^^ reference scip-swift swift Swift 6.2.4 Bool#
     true
   }
+//⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . conditionallyCompiled().
   #else
   public func conditionallyCompiledElsewhere() -> Bool {
     false
   }
   #endif
   
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . `flagSequence=`().
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . flagSequence().
+//⌄ enclosing_range_start scip-swift swiftpm SchemeFixture . flagSequence.
   public let flagSequence = "🇻🇳🇯🇵"
 //           ^^^^^^^^^^^^ definition scip-swift swiftpm SchemeFixture . `flagSequence=`().
 //                        kind Setter
@@ -569,4 +682,7 @@
 //                        display_name SchemeFixture.flagSequence : Swift.String
 //                        signature_documentation
 //                        > var flagSequence
+//                                           ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . `flagSequence=`().
+//                                           ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . flagSequence().
+//                                           ⌃ enclosing_range_end scip-swift swiftpm SchemeFixture . flagSequence.
   

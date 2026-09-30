@@ -46,7 +46,7 @@ struct USRSymbolParserTests {
     #expect(parsed.name == "greet")
   }
 
-  @Test("retroactive extension attributes to the owner module, never the declaring module")
+  @Test("unique retroactive extension retains its readable owner-module identity")
   func retroactiveExtensionAttributesToOwnerModule() throws {
     // s:SS17CapabilityFixtureE9spikeFlagSSyF: SS = String (Swift stdlib), 17CapabilityFixtureE
     // = the EXTENDING module. SYM-02: the emitted symbol uses the extended type's owner module
@@ -58,11 +58,9 @@ struct USRSymbolParserTests {
     #expect(parsed.name == "spikeFlag")
     #expect(parsed.extendingModule == "CapabilityFixture")
 
-    let symbol = try #require(
-      canonical(
-        "s:SS17CapabilityFixtureE9spikeFlagSSyF", name: "spikeFlag()", kind: .instanceMethod))
-    #expect(symbol == "scip-swift swift Swift \(toolchain) String#spikeFlag().")
-    #expect(!symbol.contains("CapabilityFixture"), "the declaring module must not appear")
+    #expect(canonical(
+      "s:SS17CapabilityFixtureE9spikeFlagSSyF", name: "spikeFlag()", kind: .instanceMethod)
+      == "scip-swift swift Swift \(toolchain) String#spikeFlag().")
   }
 
   @Test("same-module cross-file extension keeps the extended type's path")
@@ -92,11 +90,9 @@ struct USRSymbolParserTests {
     #expect(parsed.name == "describe")
     #expect(parsed.extendingModule == "SchemeFixtureExt")
 
-    let symbol = try #require(
-      canonical(
-        "s:13SchemeFixture3BoxV0aB3ExtE8describeSSyF", name: "describe()", kind: .instanceMethod)
-    )
-    #expect(symbol == "scip-swift swiftpm SchemeFixture . Box#describe().")
+    #expect(canonical(
+      "s:13SchemeFixture3BoxV0aB3ExtE8describeSSyF", name: "describe()", kind: .instanceMethod)
+      == "scip-swift swiftpm SchemeFixture . Box#describe().")
   }
 
   @Test("fully substituted extending module uses the trailing-0 terminator form")

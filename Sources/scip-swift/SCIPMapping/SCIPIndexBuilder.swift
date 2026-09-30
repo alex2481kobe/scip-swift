@@ -46,6 +46,7 @@ struct SCIPIndexBuilder {
     // any document is emitted, so definitions and references render identical strings by
     // construction (Pitfall 4 — the lint missingSymbolForOccurrenceError contract).
     let overloadTable = buildOverloadTable(indexStoreDB: indexStoreDB)
+    let identityTable = buildIdentityTable(indexStoreDB: indexStoreDB, overloadTable: overloadTable)
 
     // D-10 / T-02-04 (02-02 Task 3): the overload-table fingerprint is a GLOBAL cache
     // validation key. Documents are keyed by their own file's content hash, but overload
@@ -55,7 +56,9 @@ struct SCIPIndexBuilder {
     // path. `isCompatibleWith` deliberately does not carry this key: it depends on the opened
     // store, which the caller cannot know before the build.
     if let cacheStore {
-      let fingerprint = overloadTable.cacheValidationFingerprint()
+      // Also invalidate documents made before source-range validation and identity resolution.
+      let fingerprint = "source-ranges-v1:" + overloadTable.cacheValidationFingerprint()
+        + ":" + identityTable.cacheValidationFingerprint()
       if let manifest = cacheStore.loadManifest() {
         if manifest.overloadTableFingerprint != fingerprint {
           try? cacheStore.invalidateAll()
@@ -111,6 +114,7 @@ struct SCIPIndexBuilder {
             indexStoreDB: indexStoreDB,
             demangler: demangler,
             overloadTable: overloadTable,
+            identityTable: identityTable,
             referencedSymbols: &referencedSymbols,
             systemReferencedSymbols: &systemReferencedSymbols
           ) {
@@ -130,6 +134,7 @@ struct SCIPIndexBuilder {
           indexStoreDB: indexStoreDB,
           demangler: demangler,
           overloadTable: overloadTable,
+          identityTable: identityTable,
           referencedSymbols: &referencedSymbols,
           systemReferencedSymbols: &systemReferencedSymbols
         ) {
@@ -173,6 +178,7 @@ struct SCIPIndexBuilder {
         }
       }
     }
+    Self.addRelationshipTargets(documents: index.documents, externalSymbols: &externalSymbols)
     index.externalSymbols = externalSymbols.values.sorted { $0.symbol < $1.symbol }
 
     if let fallbackSummary = symbolMappingDiagnostics.summary {
@@ -188,11 +194,18 @@ struct SCIPIndexBuilder {
   /// members — and assemble via `CanonicalSymbolFormatter`. A USR the parser cannot handle
   /// takes the D-06 raw-USR fallback under the canonical module header, recorded in the
   /// per-run diagnostics; indexing never fails or drops a symbol here.
-  private func canonicalSymbolString(
+  func canonicalSymbolString(
     for symbol: Symbol, isSystemLocation: Bool, locationModuleName: String,
     overloadIndex: Int = 0,
+    identityTable: SymbolIdentityTable? = nil,
     fallbackRecorder: USRSideMapRecorder? = nil
   ) -> String {
+    if let resolved = identityTable?.symbolsByUSR[symbol.usr] {
+      if identityTable?.fallbackUSRs.contains(symbol.usr) == true {
+        fallbackRecorder?.record(symbolString: resolved, usr: symbol.usr)
+      }
+      return resolved
+    }
     if let parsed = USRSymbolParser.parse(symbol.usr),
       let canonical = USRSymbolMapper.canonicalSymbolString(
         parsed: parsed,
@@ -273,10 +286,8 @@ struct SCIPIndexBuilder {
     }
   }
 
-  /// A getter and a zero-arg method of the same name render the IDENTICAL canonical string
-  /// (golden rows 9/14), so one `SymbolInformation` serves both; the surviving Kind is the
-  /// definition that is LAST in source order, regardless of the order occurrences stream in
-  /// (Pitfall 6, made explicit).
+  /// Multiple definition occurrences of one identity retain the last source position.
+  /// Distinct USRs are disambiguated before this merge policy is applied.
   static func winningSymbolInformation(
     _ candidates: [(info: Scip_SymbolInformation, position: DefinitionPosition)]
   ) -> Scip_SymbolInformation {
@@ -317,6 +328,7 @@ struct SCIPIndexBuilder {
     indexStoreDB: IndexStoreDB,
     demangler: USRDemangler?,
     overloadTable: OverloadTable,
+    identityTable: SymbolIdentityTable,
     referencedSymbols: inout [String: Scip_SymbolInformation],
     systemReferencedSymbols: inout [String: Scip_SymbolInformation]
   ) -> (document: Scip_Document, usrSideMap: [String: String])? {
@@ -332,6 +344,7 @@ struct SCIPIndexBuilder {
     var definedSymbols: [String: (info: Scip_SymbolInformation, position: DefinitionPosition)] = [:]
     let refiner = SwiftSyntaxRefiner(filePath: filePath)
     let fallbackRecorder = USRSideMapRecorder()
+    var droppedRanges = 0
 
     for occurrence in occurrences.sorted() {
       let symbol = occurrence.symbol
@@ -346,6 +359,7 @@ struct SCIPIndexBuilder {
           isSystemLocation: occurrence.location.isSystem,
           locationModuleName: occurrence.location.moduleName,
           overloadIndex: overloadIndex,
+          identityTable: identityTable,
           fallbackRecorder: fallbackRecorder
         )
 
@@ -355,13 +369,29 @@ struct SCIPIndexBuilder {
       if Self.isGeneratedPath(filePath) {
         scipOccurrence.symbolRoles |= Int32(Scip_SymbolRole.generated.rawValue)
       }
-      scipOccurrence.singleLineRange = PositionMapping.singleLineRange(
+      let token = refiner?.tokenRange(
+        line: occurrence.location.line, utf8Column: occurrence.location.utf8Column
+      )
+      var range = PositionMapping.singleLineRange(
         location: occurrence.location,
         displayName: symbol.name,
-        exactEndColumn: refiner?
-          .exactEndColumn(line: occurrence.location.line, utf8Column: occurrence.location.utf8Column)
-          .map(Int32.init)
+        exactEndColumn: token.map { Int32($0.upperBound) }
       )
+      if let token { range.startCharacter = Int32(token.lowerBound) }
+      guard occurrence.location.line > 0, occurrence.location.utf8Column > 0,
+        let validated = refiner?.sourceBounds.validated(range)
+      else {
+        droppedRanges += 1
+        continue
+      }
+      scipOccurrence.singleLineRange = validated
+      if occurrence.roles.contains(.definition),
+        let enclosing = refiner?.enclosingRange(
+          line: occurrence.location.line, utf8Column: occurrence.location.utf8Column
+        )
+      {
+        scipOccurrence.enclosingRange = enclosing
+      }
       document.occurrences.append(scipOccurrence)
 
       var symbolInformation = Scip_SymbolInformation()
@@ -386,6 +416,7 @@ struct SCIPIndexBuilder {
           for: childOfRelation.symbol,
           isSystemLocation: occurrence.location.isSystem,
           locationModuleName: occurrence.location.moduleName,
+          identityTable: identityTable,
           fallbackRecorder: fallbackRecorder
         )
       }
@@ -400,13 +431,13 @@ struct SCIPIndexBuilder {
                 isSystemLocation: occurrence.location.isSystem,
                 locationModuleName: occurrence.location.moduleName,
                 overloadIndex: overloadTable.index(forUSR: relSymbol.usr),
+                identityTable: identityTable,
                 fallbackRecorder: fallbackRecorder
               )
             }
           )
         }
-        // Same canonical string (getter + zero-arg method, or several local-context
-        // re-manglings): the last definition in source order wins (Pitfall 6).
+        // Multiple definition occurrences of the same USR retain the last source position.
         let position = DefinitionPosition(
           relativePath: relativePath(of: filePath),
           line: occurrence.location.line,
@@ -431,6 +462,9 @@ struct SCIPIndexBuilder {
     document.symbols = definedSymbols.values.map(\.info).sorted { $0.symbol < $1.symbol }
     // D-10 (02-02): the emitted occurrence order is the canonical one, never the store's.
     document.occurrences = Self.canonicalizedOccurrences(document.occurrences)
+    if droppedRanges > 0 {
+      print("warning: dropped \(droppedRanges) occurrence range(s) outside UTF-8 source bounds in \(document.relativePath)")
+    }
     return (document, fallbackRecorder.entries)
   }
 
